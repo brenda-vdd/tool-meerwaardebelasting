@@ -180,12 +180,8 @@ if st.button ("⬅️ Vorige"):
     st.switch_page("pages/pagina_2.py")
 if st.button("Berekenen ➡️"):
     st.session_state["aankoop_voor"] = aankoop_voor
-    st.session_state["aankoopwaarde_2025"] = aankoopwaarde_2025
-    st.session_state["eindwaarde_2025"] = eindwaarde_2025
-    st.session_state["aankoopwaarde"] = aankoopwaarde
     st.session_state["minderwaarde"] = minderwaarde
     st.session_state["meerwaarde"] = meerwaarde
-    st.session_state["verkoop"] = verkoop
     st.session_state["minderwaarden_bedrag"] = minderwaarden_bedrag
     st.session_state["vrijstelling_gebruikt"] = vrijstelling_gebruikt
     st.session_state["beschikbare_vrijstelling"] = beschikbare_vrijstelling
