@@ -75,7 +75,7 @@ verkoopdatum = st.date_input(
     format="DD/MM/YYYY"
 )
 with st.container(border=True):
-    st.markdown("## :dollar: Stap 2.3 - Soort meerwaarde")
+    st.markdown("## 💶 Stap 2.3 - Soort meerwaarde")
 participatie = st.selectbox(
     "Soort participatie",
     ["Aanmerkelijk belang-meerwaarde (≥ 20%)",

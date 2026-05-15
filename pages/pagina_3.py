@@ -34,14 +34,12 @@ else:
         "Wat is de aankoopwaarde?",
         min_value = 0.00,
         step = 100.00,
-        key = "aankoopwaarde"
      )
      aankoopwaarde_berekening = aankoopwaarde
 Verkoop = st.number_input(
     "Wat is de verkoopwaarde?",
     min_value=0.00,
     step=100.00,
-    key="Verkoop"
 )
 minderwaarde = st.radio(
     "Hebt u minderwaarden?",
@@ -74,13 +72,12 @@ color:#7a5c00;
 </h1>
    
 </div>
-""".replace(",","."),
+""".replace(","," "),
 unsafe_allow_html=True
 )
 st.write("")
 with st.container(border=True):
     st.markdown("## 💶 Stap 3.1 - Vrijstelling")
-
 
 toon_vrijstelling = not(
     (belastingplichtige == "Vennootschap (VenB)"
@@ -106,11 +103,11 @@ if toon_vrijstelling:
     # Algemene vrijstelling bepalen
     if participatie == "Aanmerkelijk belang-meerwaarde (≥ 20%)":
         vrijstelling = 1_000_000
-        vrijstelling_tekst = "€ 1.000.000"
+        vrijstelling_tekst = "€ 1 000 000"
 
     elif Burgerlijke_staat == "Alleenstaande":
         vrijstelling = 10_000
-        vrijstelling_tekst = "€ 10.000"
+        vrijstelling_tekst = "€ 10 000"
 
     elif(Burgerlijke_staat == "Gehuwd"
         and huwelijksstelsel in [
@@ -118,11 +115,11 @@ if toon_vrijstelling:
             "Gemeenschap van goederen"]
     ):
         vrijstelling = 20_000
-        vrijstelling_tekst = "€ 20.000"
+        vrijstelling_tekst = "€ 20 000"
 
     else:
         vrijstelling = 10_000
-        vrijstelling_tekst = "€ 10.000"
+        vrijstelling_tekst = "€ 10 000"
     beschikbare_vrijstelling = max(0,vrijstelling - hoeveel_vrijstelling)
 
     col1, col2 = st.columns (2)
@@ -147,7 +144,7 @@ Totale vrijstelling dit jaar
 </h2>
 
 </div>
-""".replace(",", "."),
+""".replace(",", " "),
         unsafe_allow_html=True
      )
     with col2:
@@ -171,9 +168,10 @@ Beschikbare vrijstelling
 </h2>
 
 </div>
-""".replace(",", "."),
+""".replace(",", " "),
         unsafe_allow_html=True
      )
+    st.write("")
     vrijstelling_gebruiken = st.radio(
         "Wenst u de vrijstelling te gebruiken?",
         ["Ja", "Nee"]
@@ -209,6 +207,8 @@ if st.button("Berekenen ➡️"):
     st.session_state["minderwaarde"] = minderwaarde
     st.session_state["meerwaarde"] = meerwaarde
     st.session_state["minderwaarden_bedrag"] = minderwaarden_bedrag
+    st.session_state["aankoopwaarde_berekening"] = aankoopwaarde_berekening
+    st.session_state["Verkoop"] = Verkoop
     st.session_state["vrijstelling_gebruikt"] = vrijstelling_gebruikt
     st.session_state["beschikbare_vrijstelling"] = beschikbare_vrijstelling
     st.session_state["vrijstelling_gebruiken"] = vrijstelling_gebruiken

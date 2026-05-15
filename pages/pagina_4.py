@@ -18,12 +18,12 @@ soort_activa = st.session_state.get("soort_activa")
 aankoop_voor = st.session_state.get("aankoop_voor")
 aankoopdatum = st.session_state.get("aankoopdatum")
 verkoopdatum = st.session_state.get("verkoopdatum")
-aankoopwaarde = st.session_state.get("aankoopwaarde")
+aankoopwaarde_berekening = st.session_state.get("aankoopwaarde_berekening")
 minderwaarde = st.session_state.get("minderwaarde")
 eindwaarde_2025 = st.session_state.get("eindwaarde_2025")
 aankoopwaarde_2025 = st.session_state.get("aankoopwaarde_2025")
 minderwaarden_bedrag = st.session_state.get("minderwaarden_bedrag")
-verkoop = st.session_state.get("verkoop")
+Verkoop = st.session_state.get("Verkoop")
 
 if belastingplichtige == "Niet-inwoner":
     st.markdown(
@@ -151,7 +151,7 @@ color:#7f1d1d;
 </h1>
    
 </div>
-""".replace(",","."),
+""".replace(","," "),
 unsafe_allow_html=True
 )
 st.write("")
@@ -180,7 +180,7 @@ background-color:white;
 </h2>
 
 </div>
-""".replace(",", "."),
+""".replace(",", " "),
      unsafe_allow_html = True
   )
 with col2:
@@ -206,7 +206,7 @@ Vrijstelling</h4>
 </h2>
 
 </div>
-""".replace(",", "."),
+""".replace(",", " "),
         unsafe_allow_html = True
    )
 st.write("")
@@ -235,7 +235,7 @@ Belastbaar bedrag </h4>
 </h2>
 
 </div>
-""".replace(",", "."),
+""".replace(",", " "),
         unsafe_allow_html = True
    )
 with col2:
@@ -268,10 +268,21 @@ margin:0;
 </h2>
 
 </div>
-""".replace(",","."),
+""",
         unsafe_allow_html = True
     )
-
+st.write("")
+if participatie == "Aanmerkelijk belang-meerwaarde (≥ 20%)":
+    with st.expander("ℹ️ Progressieve tarieven:"):
+        st.markdown(
+        """
+- **1,25%**: van € 0,00 tot € 2 500 000,00
+- **2,50%**: van € 2 500 000,00 tot 5 000 000,00
+- **5,00%**: van 5 000 000,00 tot 10 000 000,00
+- **10,00%**: vanaf 10 000 000,00
+""",
+    unsafe_allow_html=True
+    )
 st.subheader("💡 Advies & actiepunten")
     
 st.markdown(
@@ -297,7 +308,8 @@ margin-bottom:0;
 ">
 
 **Opt-in:**
-- De bank of verzekeringsmaatschappij houdt de belasting in zodat u dit niet zelf moet aangeven. 
+- De bank of verzekeringsmaatschappij houdt de belasting in zodat u dit niet zelf moet aangeven.
+- De bank hanteert automatisch de koers van 31 december 2025 voor historische meerwaarde.
 
 **Opt-out:**
 - U laat weten aan u bank of verzekeringsmaatschappij dat u de belasting zelf gaat aangeven.
@@ -313,9 +325,9 @@ Bij een verkoop voor 31 augustus 2026 gaat de verzekeraar de belasting niet auto
     unsafe_allow_html=True
 )
 st.write("")
-    
-st.markdown(
-    """
+if belastingplichtige == "Natuurlijke persoon (PB)" and participatie =="Gewone meerwaarde":
+    st.markdown(
+        """
 <div style="
 background-color:#eef8fd;
 padding:20px;
@@ -335,14 +347,44 @@ color:#0b2e4f;
 font-size:17px;
 margin-bottom:0;
 ">
-Als u de vrijstelling niet helemaal benut, kan gedurende een periode van vijf jaar jaarlijks een bijkomende vrijstelling van € 1.000,00 worden opgebouwd.
-Wordt de volledige jaarlijkse vrijstelling aangewend, dan kan er geen vrijstelling worden overgedragen naar volgend jaar. 
+Indien de vrijstelling niet volledig wordt benut, kan gedurende een periode van vijf jaar jaarlijks een bijkomende vrijstelling van € 1 000,00 worden opgebouwd.
+Wanneer de volledige jaarlijkse vrijstelling wordt gebruikt, kan geen vrijstelling worden overgedragen naar het volgende jaar.
 </p>
 
 </div>
 """,
     unsafe_allow_html=True
 )
+if participatie == "Aanmerkelijk belang-meerwaarde (≥ 20%)":
+    st.markdown(
+        """
+<div style="
+background-color:#eef8fd;
+padding:20px;
+border-left:8px solid #14a0e3;
+border-radius:12px;
+">
+
+<h4 style="
+margin-top:0;
+color:#0b2e4f;
+">
+📈 Vrijstellingsopbouw
+</h4>
+
+<p style="
+color:#0b2e4f;
+font-size:17px;
+margin-bottom:0;
+">
+De vrijstelling van € 1 000 000,00 geldt per periode van vijf jaar en wordt niet geïndexeerd.
+Wanneer de vrijstelling volledig is opgebruikt, is de meerwaardebelasting verschuldigd vanaf de eerste euro.
+</p>
+</div>
+""",
+    unsafe_allow_html=True
+    )
+
 st.write("")
 
 st.markdown(
@@ -425,16 +467,13 @@ st.write(f"**Verkoopdatum:** {verkoopdatum}")
 
 st.write(f"**Participatie:** {participatie}")
 
-if aankoopwaarde_2025:
-    st.write(f"**Aankoopwaarde voor 31/12/2025:** {aankoopwaarde_2025}")
-else:
-    st.write(f"**Aankoopwaarde:** {aankoopwaarde}")
+st.write(f"**Aankoopwaarde:** € {aankoopwaarde_berekening:,.2f}".replace(",", " "))
 
-st.write(f"**Verkoopwaarde:** {verkoop}")
+st.write(f"**Verkoopwaarde:** € {Verkoop:,.2f}".replace(",", " "))
 
 st.write(f"**Minderwaarde:** {minderwaarde}")
 if minderwaarde == "Ja":
-    st.write(f"**Hoeveel Minderwaarde:** {minderwaarden_bedrag}")
+    st.write(f"**Hoeveel Minderwaarde:** € {minderwaarden_bedrag:,.2f}".replace(",", " "))
 
 
 if st.button ("⬅️ Vorige"):
