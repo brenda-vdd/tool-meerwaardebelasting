@@ -39,18 +39,15 @@ border-radius:12px;
 margin-top:0;
 color:#0b2e4f;
 ">
-
 Niet-inwoner
-
 </h4>
-<p style="
+<h2 style="
 color:#0b2e4f;
 font-size:17px;
 margin-bottom:0;
 ">
-
 De Belgische meerwaardebelasting is niet van toepassing.
-</p>
+</h2>
 
 </div>
 
@@ -58,6 +55,11 @@ De Belgische meerwaardebelasting is niet van toepassing.
     unsafe_allow_html=True
 )
     belasting = 0
+    st.write("")
+    if st.button("🔁 Nieuwe berekening", key="nieuwe_berekening_niet-inwoner"):
+        st.session_state.clear()
+        st.switch_page("Tool.py")
+    
     st.stop()
 tarief_tekst = ""
 
@@ -112,23 +114,24 @@ if belastingplichtige == "Vennootschap (VenB)":
 
     elif participatie == "Aanmerkelijk belang-meerwaarde (≥ 20%)":
         belasting = bereken_ab_belasting(meerwaarde,gebruikte_vrijstelling)
-        tarief_tekst = "Progressief: 1,25% / 2,50% / 5,00% / 10,00%"
-else: 
-      belasting = belastbare_basis * 0.10
-      tarief_tekst = "10,00%"
-
-# Andere belastingplichtige
-if participatie == "Interne meerwaarde":
-    belasting = belastbare_basis *0.33
-    tarief_tekst = "33,00%"
-
-elif participatie == "Aanmerkelijk belang-meerwaarde (≥ 20%)":
-    belasting = bereken_ab_belasting(meerwaarde,gebruikte_vrijstelling)
-    tarief_tekst = "Progressief: 1,25% / 2,50% / 5,00% / 10,00%"
-
+        tarief_tekst = "Progressief tarief"
+    else: 
+        belasting = belastbare_basis * 0.10
+        tarief_tekst = "10,00%"
 else:
-    belasting = belastbare_basis * 0.10
-    tarief_tekst = "10,00%"
+
+    # Andere belastingplichtige
+    if participatie == "Interne meerwaarde":
+        belasting = belastbare_basis *0.33
+        tarief_tekst = "33,00%"
+
+    elif participatie == "Aanmerkelijk belang-meerwaarde (≥ 20%)":
+        belasting = bereken_ab_belasting(meerwaarde,gebruikte_vrijstelling)
+        tarief_tekst = "Progressief tarief"
+
+    else:
+        belasting = belastbare_basis * 0.10
+        tarief_tekst = "10,00%"
 
 with st.container (border=False):
     
@@ -195,9 +198,10 @@ border-radius:12px;
 background-color:white;
 ">
 
-<h4>Vrijstelling</h4>
+<h4 style="color:#98c21d">
+Vrijstelling</h4>
 
-<h2 style = "color:green;">
+<h2 style = "color:#98c21d;">
 € {gebruikte_vrijstelling:,.0f}
 </h2>
 
@@ -222,9 +226,11 @@ border-radius:12px;
 background-color:white;
 ">
 
-<h4> Belastbaar bedrag </h4>
+<h4 style="color:#e30814
+"> 
+Belastbaar bedrag </h4>
 
-<h2 style="color:red;">
+<h2 style="color:#e30814;">
 € {belastbare_basis:,.0f}
 </h2>
 
@@ -247,9 +253,17 @@ border-radius:12px;
 background-color:white;
 ">
 
-<h4> Tarief </h4>
+<h4 style="
+margin-top:0;
+">
+Tarief 
+</h4>
 
-<h2>
+<h2 style="
+line-height: 1.4;
+word-wrap:break-word;
+margin:0;
+">
 {tarief_tekst}
 </h2>
 
@@ -283,10 +297,11 @@ margin-bottom:0;
 ">
 
 **Opt-in:**
-- de bank houdt de belasting in zodat u dit niet zelf moet aangeven.
+- De bank of verzekeringsmaatschappij houdt de belasting in zodat u dit niet zelf moet aangeven. 
 
 **Opt-out:**
-- U geeft de belasting zelf aan. 
+- U laat weten aan u bank of verzekeringsmaatschappij dat u de belasting zelf gaat aangeven.
+
 ### 📬 Verkoop voof 1 juni 2026 - opt-in / opt-out keuze
 Bij een verkoop voor 1 juni gaat de bank de belasting niet automatisch inhouden.Tenzij u kiest voor een opt-in. 
 ### 📬 Verkoop voor 31 augustus 2026 - opt-in / opt-out keuze
@@ -428,7 +443,6 @@ if st.button ("⬅️ Vorige"):
 
 if st.button("🔁 Nieuwe berekening"):
     st.session_state.clear()
-
     st.switch_page("Tool.py")
 
 st.caption(

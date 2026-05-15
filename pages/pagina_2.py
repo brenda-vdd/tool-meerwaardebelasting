@@ -3,6 +3,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import date
 
+belastingplichtige = st.session_state.get("belastingplichtige")
+vastgoedvennootschap = st.session_state.get("vastgoedvennootschap")
+DBI_aftrek = st.session_state.get("DBI_aftrek")
 st.title("📊 Meerwaardebelasting tool België")
 
 with st.container(border=True):
@@ -15,23 +18,52 @@ soort_activa = st.selectbox(
      "Categorie 3: crypto activa",
      "Categorie 4: valuta"]
     )
-# Extra vraag tonen na keuze
-if soort_activa:
-    buitenlandse_brokers = st.radio(
-        "Zijn de financiële activa bij buitenlandse brokers, banken of verzekeraars afgesloten?",
-        ["Ja", "Nee"]
+with st.expander("ℹ️ Info bij soort FVA"):
+    st.markdown(
+        """
+**Categorie 1:** 
+Zowel beursgenoteerde als niet-beursgenoteerde aandelen, obligaties, ETF's, derivatencontracten (zoals opties, futures, swaps,...), emissierechten en vergelijkbare producten.
+
+**Categorie 2:** 
+Spaar- en beleggingsverzekeringen, waaronder tak 21-, tak 23- en tak 26
+
+**Categorie 3:** 
+Dit zijn digitale weergaven van waarde of rechten."
+
+**Categorie 4:** 
+Beleggingsgoud, munten, biljetten, digitaal geld,...
+"""
     )
-with st.expander("ℹ️ Info bij buitenlandse brokers, banken of verzekeraars"):
-    st.write("Buitenlandse brokers, banken of verzekeraars zullen de belasting nooit inhouden. U gaat dit zelf moeten aangeven.")
+toon_buitenlandse_brokers = not(
+    belastingplichtige == "Vennootschap (VenB)"
+    and vastgoedvennootschap == "Nee"
+    and DBI_aftrek == "Nee")
+if toon_buitenlandse_brokers:
+    # Extra vraag tonen na keuze
+    if soort_activa:
+        buitenlandse_brokers = st.radio(
+            "Zijn de financiële activa bij buitenlandse brokers, banken of verzekeraars afgesloten?",
+            ["Ja", "Nee"]
+        )
+    with st.expander("ℹ️ Info bij buitenlandse brokers, banken of verzekeraars"):
+        st.write("Buitenlandse brokers, banken of verzekeraars zullen de belasting nooit inhouden. U gaat dit zelf moeten aangeven.")
+
 with st.container(border=True):
     st.markdown("## 📅 Stap 2.1 - Aankoop en verkoop")
-
-aankoop_voor = st.radio(
-    "Aangekocht voor 31 december 2025?",
-    ["Ja", "Nee"]
- )
-with st.expander("ℹ️ Info over de historische aankoopwaarde"):
-    st.write("Voor financiële activa aangekocht voor 31 december 2025 wordt de waarde op 31 december 2025 gebruikt. Indien u de oorspronkelijke aankoopprijs kunt aantonen, dan mag u de hoogste van beide gebruiken. Zonder bewijs gebruikt de fiscus de waarde op 31 december 2025.")
+toon_aankoop_voor = not(
+    belastingplichtige == "Vennootschap (VenB)"
+    and vastgoedvennootschap == "Nee"
+    and DBI_aftrek == "Nee"
+)
+if toon_aankoop_voor:
+    aankoop_voor = st.radio(
+        "Aangekocht voor 31 december 2025?",
+        ["Ja", "Nee"]
+    )
+    with st.expander("ℹ️ Info over de historische aankoopwaarde"):
+        st.write("Voor financiële activa aangekocht voor 31 december 2025 wordt de waarde op 31 december 2025 gebruikt. Indien u de oorspronkelijke aankoopprijs kunt aantonen, dan mag u de hoogste van beide gebruiken. Zonder bewijs gebruikt de fiscus de waarde op 31 december 2025.")
+else:
+    aankoop_voor = "Nee"
 aankoopdatum = st.date_input(
     "Wat is de aankoopdatum van uw financiële activa?",
     value=None,

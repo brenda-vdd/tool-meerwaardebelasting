@@ -27,7 +27,7 @@ if belastingplichtige == "Natuurlijke persoon (PB)":
         "Burgerlijke staat",
         ["Alleenstaande",
          "Gehuwd",
-         "Wettelijk stelsel"]
+         "Wettelijk samenwonend"]
      )
     # Extra vraag bij Gehuwd
     

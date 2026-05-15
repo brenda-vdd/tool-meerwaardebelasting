@@ -80,54 +80,56 @@ unsafe_allow_html=True
 st.write("")
 with st.container(border=True):
     st.markdown("## 💶 Stap 3.1 - Vrijstelling")
-# Reeds gebruikte vrijstelling
-hoeveel_vrijstelling = 0.00
 
-vrijstelling_gebruikt = st.radio(
-    "Hebt u dit jaar al FVA verkocht en de vrijstelling (deels) gebruikt?",
-    ["Ja", "Nee"]
+
+toon_vrijstelling = not(
+    (belastingplichtige == "Vennootschap (VenB)"
+    and vastgoedvennootschap == "Nee"
+    and DBI_aftrek == "Nee"
+ )
+or participatie == "Interne meerwaarde"
+)
+if toon_vrijstelling:
+    # Reeds gebruikte vrijstelling
+    hoeveel_vrijstelling = 0.00
+    
+    vrijstelling_gebruikt = st.radio(
+        "Hebt u dit jaar al FVA verkocht en de vrijstelling (deels) gebruikt?",
+        ["Ja", "Nee"]
     )
-if vrijstelling_gebruikt == "Ja":
-    hoeveel_vrijstelling = st.number_input(
+    if vrijstelling_gebruikt == "Ja":
+        hoeveel_vrijstelling = st.number_input(
         "Hoeveel van de vrijstelling hebt u al gebruikt?",
         min_value = 0.00,
         step = 100.00)
-# Algemene vrijstelling bepalen
-if (belastingplichtige == "Vennootschap (VenB)"
-    and vastgoedvennootschap == "Nee"
-    and DBI_aftrek =="Nee"
- ):
-    vrijstelling = 0
-    vrijstelling_tekst = "Geen vrijstelling"
 
-elif participatie == "Aanmerkelijk belang-meerwaarde (≥ 20%)":
-    vrijstelling = 1_000_000
-    vrijstelling_tekst = "€ 1.000.000"
+    # Algemene vrijstelling bepalen
+    if participatie == "Aanmerkelijk belang-meerwaarde (≥ 20%)":
+        vrijstelling = 1_000_000
+        vrijstelling_tekst = "€ 1.000.000"
 
-elif Burgerlijke_staat == "Alleenstaande":
-    vrijstelling = 10_000
-    vrijstelling_tekst = "€ 10.000"
+    elif Burgerlijke_staat == "Alleenstaande":
+        vrijstelling = 10_000
+        vrijstelling_tekst = "€ 10.000"
 
-elif(Burgerlijke_staat == "Gehuwd"
-    and huwelijksstelsel in [
-        "Wettelijk stelsel",
-        "Gemeenschap van goederen"
-     ]
-):
-    vrijstelling = 20_000
-    vrijstelling_tekst = "€ 20.000"
+    elif(Burgerlijke_staat == "Gehuwd"
+        and huwelijksstelsel in [
+            "Wettelijk stelsel",
+            "Gemeenschap van goederen"]
+    ):
+        vrijstelling = 20_000
+        vrijstelling_tekst = "€ 20.000"
 
-else:
-    vrijstelling = 10_000
-    vrijstelling_tekst = "€ 10.000"
-beschikbare_vrijstelling = max(0,
-    vrijstelling - hoeveel_vrijstelling
-)
-col1, col2 = st.columns (2)
+    else:
+        vrijstelling = 10_000
+        vrijstelling_tekst = "€ 10.000"
+    beschikbare_vrijstelling = max(0,vrijstelling - hoeveel_vrijstelling)
 
-with col1:
-    st.markdown(
-        f"""
+    col1, col2 = st.columns (2)
+
+    with col1:
+        st.markdown(
+            f"""
 <div style="
 background-color:#f7fbe8;
 padding:20px;
@@ -147,10 +149,10 @@ Totale vrijstelling dit jaar
 </div>
 """.replace(",", "."),
         unsafe_allow_html=True
-)
-with col2:
-    st.markdown(
-        f"""
+     )
+    with col2:
+        st.markdown(
+            f"""
 <div style="
 background-color:#f7fbe8;
 padding:20px;
@@ -171,11 +173,35 @@ Beschikbare vrijstelling
 </div>
 """.replace(",", "."),
         unsafe_allow_html=True
+     )
+    vrijstelling_gebruiken = st.radio(
+        "Wenst u de vrijstelling te gebruiken?",
+        ["Ja", "Nee"]
 )
-vrijstelling_gebruiken = st.radio(
-    "Wenst u de vrijstelling te gebruiken?",
-    ["Ja", "Nee"]
+else:
+    vrijstelling = 0
+    beschikbare_vrijstelling = 0
+    vrijstelling_gebruikt = "Nee"
+    vrijstelling_gebruiken = "Nee"
+    st.markdown(
+        """
+<div style="
+background-color:#fffbea;
+padding:20px;
+border-left:8px solid #f5df00;
+border-radius:12px;
+color:#7a5c00;
+">
+
+<h2 style="margin-bottom:0;">
+Voor deze vennootschap is geen vrijstelling van toepassing.
+</h2>
+</div>
+""",
+    unsafe_allow_html=True
 )
+st.write("")
+
 if st.button ("⬅️ Vorige"):
     st.switch_page("pages/pagina_2.py")
 if st.button("Berekenen ➡️"):
