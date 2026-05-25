@@ -24,6 +24,7 @@ eindwaarde_2025 = st.session_state.get("eindwaarde_2025")
 aankoopwaarde_2025 = st.session_state.get("aankoopwaarde_2025")
 minderwaarden_bedrag = st.session_state.get("minderwaarden_bedrag")
 Verkoop = st.session_state.get("Verkoop")
+titel = st.session_state.get("titel")
 
 if belastingplichtige == "Niet-inwoner":
     st.markdown(
@@ -84,7 +85,30 @@ def bereken_ab_belasting(meerwaarde, gebruikte_vrijstelling):
     if resterend > 0:
         belasting += resterend * 0.10
     return belasting
-
+if meerwaarde < 0:
+    belasting = 0
+    belastbare_basis = 0
+    tarief_tekst = "Niet van toepassing"
+    st.markdown(
+        """
+<div style="
+background-color:#fff1f2;
+padding:20px;
+border-left:8px solid #e30814;
+border-radius:12px;
+color:#7f1d1d;
+">
+<h2>Minderwaarde</h2>
+<p> Er is geen meerwaardebelasting verschuldigd. </p>
+</div>
+""",
+    unsafe_allow_html=True
+  )
+    st.write("")
+    if st.button("🔁 Nieuwe berekening", key="nieuwe_berekening_minderwaarde"):
+        st.session_state.clear()
+        st.switch_page("Tool.py")
+    st.stop()
 # Gebruiker gebruikt de vrijstelling niet
 if vrijstelling_gebruiken == "Ja":
     gebruikte_vrijstelling = beschikbare_vrijstelling
@@ -103,7 +127,7 @@ if belastingplichtige == "Vennootschap (VenB)":
 
     elif vastgoedvennootschap == "Nee" and DBI_aftrek == "Nee":
         belasting = belastbare_basis *0.25
-        tarief_tekst = "25.00%"
+        tarief_tekst = "25,00%"
 
     # Vastgoedvennootschap --> meerwaardebelasting
     elif vastgoedvennootschap == "Ja":
@@ -147,11 +171,12 @@ color:#7f1d1d;
          
 <h2> Verschuldigde meerwaardebelasting: </h2>
 <h1>
-€ {belasting:,.0f}
+€ {belasting:,.2f}
 </h1>
    
 </div>
-""".replace(","," "),
+""".replace(","," ")
+   .replace(".",","),
 unsafe_allow_html=True
 )
 st.write("")
@@ -173,14 +198,15 @@ border-radius:12px;
 background-color:white;
 ">
 
-<h4>Meerwaarde</h4>
+<h4>{titel}</h4>
 
 <h2>
-€ {meerwaarde:,.0f}
+€ {meerwaarde:,.2f}
 </h2>
 
 </div>
-""".replace(",", " "),
+""".replace(",", " ")
+   .replace(".",","),
      unsafe_allow_html = True
   )
 with col2:
@@ -202,11 +228,12 @@ background-color:white;
 Vrijstelling</h4>
 
 <h2 style = "color:#98c21d;">
-€ {gebruikte_vrijstelling:,.0f}
+€ {gebruikte_vrijstelling:,.2f}
 </h2>
 
 </div>
-""".replace(",", " "),
+""".replace(",", " ")
+   .replace(".",","),
         unsafe_allow_html = True
    )
 st.write("")
@@ -231,11 +258,12 @@ background-color:white;
 Belastbaar bedrag </h4>
 
 <h2 style="color:#e30814;">
-€ {belastbare_basis:,.0f}
+€ {belastbare_basis:,.2f}
 </h2>
 
 </div>
-""".replace(",", " "),
+""".replace(",", " ")
+   .replace(".",","),
         unsafe_allow_html = True
    )
 with col2:
@@ -283,9 +311,10 @@ if participatie == "Aanmerkelijk belang-meerwaarde (≥ 20%)":
 """,
     unsafe_allow_html=True
     )
+
 st.subheader("💡 Advies & actiepunten")
-    
-st.markdown(
+if belastingplichtige !="Vennootschap (VenB)":
+    st.markdown(
     """
 <div style="
 background-color:#eef8fd;
@@ -324,9 +353,10 @@ Bij een verkoop voor 31 augustus 2026 gaat de verzekeraar de belasting niet auto
 """,
     unsafe_allow_html=True
 )
-st.write("")
-if belastingplichtige == "Natuurlijke persoon (PB)" and participatie =="Gewone meerwaarde":
-    st.markdown(
+    st.write("")
+
+    if belastingplichtige == "Natuurlijke persoon (PB)" and participatie =="Gewone meerwaarde":
+        st.markdown(
         """
 <div style="
 background-color:#eef8fd;
@@ -347,16 +377,16 @@ color:#0b2e4f;
 font-size:17px;
 margin-bottom:0;
 ">
-Indien de vrijstelling niet volledig wordt benut, kan gedurende een periode van vijf jaar jaarlijks een bijkomende vrijstelling van € 1 000,00 worden opgebouwd.
-Wanneer de volledige jaarlijkse vrijstelling wordt gebruikt, kan geen vrijstelling worden overgedragen naar het volgende jaar.
+Wanneer de eerste schijf van € 1 000 van de basisvrijstelling niet volledig wordt gebruikt, kan het resterende bedrag worden overgedragen naar een volgend belastbaar tijdper.
+Dit is mogelijk gedurende vijf jaar, tot een maximum vrijstelling van € 15 000. 
 </p>
 
 </div>
 """,
     unsafe_allow_html=True
 )
-if participatie == "Aanmerkelijk belang-meerwaarde (≥ 20%)":
-    st.markdown(
+    if participatie == "Aanmerkelijk belang-meerwaarde (≥ 20%)":
+        st.markdown(
         """
 <div style="
 background-color:#eef8fd;
@@ -416,9 +446,9 @@ Het spreiden van beleggingen over verschillende financiële vaste activa kan bij
     unsafe_allow_html=True
 )
 st.write("")
-
-st.markdown(
-    """
+if belastingplichtige !=("Vennootschap (VenB)"):
+    st.markdown(
+        """
 <div style="
 background-color:#fffbea;
 padding:20px;

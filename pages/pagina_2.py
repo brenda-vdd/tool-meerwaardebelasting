@@ -6,6 +6,7 @@ from datetime import date
 belastingplichtige = st.session_state.get("belastingplichtige")
 vastgoedvennootschap = st.session_state.get("vastgoedvennootschap")
 DBI_aftrek = st.session_state.get("DBI_aftrek")
+
 st.title("📊 Meerwaardebelasting tool België")
 
 with st.container(border=True):
@@ -55,6 +56,7 @@ toon_aankoop_voor = not(
     and vastgoedvennootschap == "Nee"
     and DBI_aftrek == "Nee"
 )
+
 if toon_aankoop_voor:
     aankoop_voor = st.radio(
         "Aangekocht voor 31 december 2025?",
@@ -69,28 +71,54 @@ aankoopdatum = st.date_input(
     value=None,
     format="DD/MM/YYYY"
  )
+controle_2025 = not(
+    belastingplichtige == "Vennootschap (VenB)"
+    and vastgoedvennootschap == "Nee"
+)
+if controle_2025 and aankoopdatum:
+    grensdatum = date(2025,12,31)
+    if aankoop_voor == "Ja" and aankoopdatum > grensdatum:
+        st.error(
+            "De aankoopdatum ligt na 31/12/2025. "
+            "Gelieve een correcte datum in te vullen."
+        )
+    if aankoop_voor == "Nee" and aankoopdatum <= grensdatum:
+        st.error(
+            "De aankoopdatum ligt voor of op 31/12/2025. "
+            "Gelieve de juiste optie te selecteren."
+        )
 verkoopdatum = st.date_input(
     "Wat is de verkoopdatum van uw financîële activa?",
     value=date.today(),
     format="DD/MM/YYYY"
 )
-with st.container(border=True):
-    st.markdown("## 💶 Stap 2.3 - Soort meerwaarde")
-participatie = st.selectbox(
-    "Soort participatie",
-    ["Aanmerkelijk belang-meerwaarde (≥ 20%)",
-     "Interne meerwaarde",
-     "Gewone meerwaarde"]
+
+toon_participatie = not(
+    belastingplichtige == "Vennootschap (VenB)"
+    and vastgoedvennootschap =="Nee"
+    and DBI_aftrek =="Nee"
+)
+if toon_participatie:
+    with st.container(border=True):
+        st.markdown("## 💶 Stap 2.3 - Soort meerwaarde")
+    participatie = st.selectbox(
+        "Soort participatie",
+        ["Aanmerkelijk belang-meerwaarde (≥ 20%)",
+        "Interne meerwaarde",
+        "Gewone meerwaarde"]
  )
+else:
+    participatie = "Gewone meerwaarde"
 if st.button ("⬅️ Vorige"):
     st.switch_page("Tool.py")
 
 if st.button ("Volgende ➡️"):
     st.session_state["soort_activa"] = soort_activa
+    st.session_state["buitenlandse_brokers"] = buitenlandse_brokers
     st.session_state["aankoop_voor"] = aankoop_voor
-    st.session_state["participatie"] = participatie
     st.session_state["aankoopdatum"] = aankoopdatum
     st.session_state["verkoopdatum"] = verkoopdatum
+    st.session_state["participatie"] = participatie
     st.switch_page("pages/pagina_3.py")
 st.caption(
     "Deze tool is louter informatief en vervangt geen fiscaal advies."
