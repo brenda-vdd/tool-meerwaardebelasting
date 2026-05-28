@@ -52,7 +52,6 @@ with st.container(border=True):
     st.markdown("## 📅 Stap 2.1 - Aankoop en verkoop")
 toon_aankoop_voor = not(
     belastingplichtige == "Vennootschap (VenB)"
-    and DBI_aftrek == "Nee"
 )
 
 if toon_aankoop_voor:

@@ -51,7 +51,6 @@ toon_minderwaarde_vraag = not (
 
 if voorlopige_meerwaarde > 0 and toon_minderwaarde_vraag:
 
-
     minderwaarde = st.radio(
         "Hebt u minderwaarden?",
         ["Ja", "Nee"]
@@ -125,14 +124,7 @@ if toon_vrijstelling:
     st.write("")
     with st.container(border=True):
         st.markdown("## 💶 Stap 3.1 - Vrijstelling")
-        
-        toon_vrijstelling = not( 
-            (
-                belastingplichtige == "Vennootschap (VenB)"
-                and DBI_aftrek == "Nee"
-            )
-            or participatie == "Interne meerwaarde"
-        )
+
     if toon_vrijstelling:
         # Reeds gebruikte vrijstelling
         hoeveel_vrijstelling = 0.00
@@ -149,7 +141,10 @@ if toon_vrijstelling:
              )
 
     # Algemene vrijstelling bepalen
-    if participatie == "Aanmerkelijk belang-meerwaarde (≥ 20%)":
+    if belastingplichtige == "Vennootschap (VenB)" and DBI_aftrek == "Ja":
+        vrijstelling = 0
+        vrijstelling_tekst = "Vrijgesteld"
+    elif participatie == "Aanmerkelijk belang-meerwaarde (≥ 20%)":
         vrijstelling = 1_000_000
         vrijstelling_tekst = "€ 1 000 000"
 
