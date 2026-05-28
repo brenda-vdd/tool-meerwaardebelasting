@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 from datetime import date
 
 belastingplichtige = st.session_state.get("belastingplichtige")
-vastgoedvennootschap = st.session_state.get("vastgoedvennootschap")
 DBI_aftrek = st.session_state.get("DBI_aftrek")
 
 st.title("📊 Meerwaardebelasting tool België")
@@ -35,9 +34,9 @@ Dit zijn digitale weergaven van waarde of rechten."
 Beleggingsgoud, munten, biljetten, digitaal geld,...
 """
     )
+buitenlandse_brokers = None
 toon_buitenlandse_brokers = not(
     belastingplichtige == "Vennootschap (VenB)"
-    and vastgoedvennootschap == "Nee"
     and DBI_aftrek == "Nee")
 if toon_buitenlandse_brokers:
     # Extra vraag tonen na keuze
@@ -53,7 +52,6 @@ with st.container(border=True):
     st.markdown("## 📅 Stap 2.1 - Aankoop en verkoop")
 toon_aankoop_voor = not(
     belastingplichtige == "Vennootschap (VenB)"
-    and vastgoedvennootschap == "Nee"
     and DBI_aftrek == "Nee"
 )
 
@@ -73,7 +71,6 @@ aankoopdatum = st.date_input(
  )
 controle_2025 = not(
     belastingplichtige == "Vennootschap (VenB)"
-    and vastgoedvennootschap == "Nee"
 )
 if controle_2025 and aankoopdatum:
     grensdatum = date(2025,12,31)
@@ -95,7 +92,6 @@ verkoopdatum = st.date_input(
 
 toon_participatie = not(
     belastingplichtige == "Vennootschap (VenB)"
-    and vastgoedvennootschap =="Nee"
     and DBI_aftrek =="Nee"
 )
 if toon_participatie:

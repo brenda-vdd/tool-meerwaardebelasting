@@ -16,7 +16,7 @@ huwelijksstelsel = st.session_state.get("huwelijksstelsel")
 Burgerlijke_staat = st.session_state.get("Burgerlijke_staat")
 aankoopwaarde = None
 aankoopwaarde_2025 = None
-
+eindwaarde_2025 = None
 if aankoop_voor == "Ja":
     aankoopwaarde_2025 = st.number_input(
         "Wat is de oorspronkelijke aankoopwaarde?",
@@ -45,6 +45,10 @@ minderwaarde = None
 minderwaarden_bedrag = 0.0
 voorlopige_meerwaarde = Verkoop - aankoopwaarde_berekening
 
+toon_minderwaarde_vraag = not (
+    belastingplichtige == "Vennootschap (VenB)"
+    and DBI_aftrek == "Nee"
+)
 if voorlopige_meerwaarde > 0:
 
     minderwaarde = st.radio(
@@ -112,7 +116,10 @@ Aangezien er sprake is van een minderwaarde, is er geen meerwaardebelasting vers
 """,
     unsafe_allow_html=True
 )
-toon_vrijstelling = meerwaarde > 0
+toon_vrijstelling = meerwaarde > 0 and not(
+    belastingplichtige == "Vennootschap (VenB)"
+    and DBI_aftrek == "Nee"
+) and participatie != "Interne meerwaarde"
 if toon_vrijstelling:
     st.write("")
     with st.container(border=True):
@@ -121,7 +128,6 @@ if toon_vrijstelling:
         toon_vrijstelling = not( 
             (
                 belastingplichtige == "Vennootschap (VenB)"
-                and vastgoedvennootschap == "Nee"
                 and DBI_aftrek == "Nee"
             )
             or participatie == "Interne meerwaarde"
@@ -152,7 +158,6 @@ if toon_vrijstelling:
 
     elif(Burgerlijke_staat == "Gehuwd"
         and huwelijksstelsel in [
-            "Wettelijk stelsel",
             "Gemeenschap van goederen"]
     ):
         vrijstelling = 20_000
@@ -256,6 +261,8 @@ if st.button("Berekenen ➡️"):
     st.session_state["vrijstelling_gebruiken"] = vrijstelling_gebruiken
     st.session_state["beschikbare_vrijstelling"] = beschikbare_vrijstelling
     st.session_state["meerwaarde"] = meerwaarde
+    st.session_state["titel"] = titel
+    st.session_state["aankoopwaarde_berekening"] = aankoopwaarde_berekening
     st.switch_page("pages/pagina_4.py")
 st.caption(
     "Deze tool is louter informatief en vervangt geen fiscaal advies."

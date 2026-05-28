@@ -26,6 +26,8 @@ minderwaarden_bedrag = st.session_state.get("minderwaarden_bedrag")
 Verkoop = st.session_state.get("Verkoop")
 titel = st.session_state.get("titel")
 
+belasting = 0
+
 if belastingplichtige == "Niet-inwoner":
     st.markdown(
         """
@@ -125,26 +127,12 @@ if belastingplichtige == "Vennootschap (VenB)":
         belasting = 0
         tarief_tekst = "Vrijgesteld"
 
-    elif vastgoedvennootschap == "Nee" and DBI_aftrek == "Nee":
+    elif belastingplichtige == "Vennootschap (VenB)" and DBI_aftrek == "Nee":
         belasting = belastbare_basis *0.25
         tarief_tekst = "25,00%"
 
-    # Vastgoedvennootschap --> meerwaardebelasting
-    elif vastgoedvennootschap == "Ja":
-
-        if participatie == "Interne meerwaarde":
-            belasting = belastbare_basis * 0.33
-            tarief_tekst = "33,00%"
-
-    elif participatie == "Aanmerkelijk belang-meerwaarde (≥ 20%)":
-        belasting = bereken_ab_belasting(meerwaarde,gebruikte_vrijstelling)
-        tarief_tekst = "Progressief tarief"
-    else: 
-        belasting = belastbare_basis * 0.10
-        tarief_tekst = "10,00%"
-else:
-
     # Andere belastingplichtige
+else:
     if participatie == "Interne meerwaarde":
         belasting = belastbare_basis *0.33
         tarief_tekst = "33,00%"

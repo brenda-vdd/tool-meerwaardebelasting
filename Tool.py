@@ -47,19 +47,10 @@ if belastingplichtige == "Natuurlijke persoon (PB)":
             )
 if belastingplichtige == "Niet-inwoner":
     st.info("Er is geen Belgische meerwaardebelasting van toepassing.")
-# Extra vraag bij Vennootschap (VenB)
 
+# Extra vraag bij Vennootschap (VenB)  
 if belastingplichtige == "Vennootschap (VenB)":
-
-    vastgoedvennootschap = st.radio(
-        "Is dit een vastgoedvennootschap?",
-        ["Ja", "Nee"]
-     )
-    
-    # Enkel tonen indien GEEN vastgoedvennootschap
-    if vastgoedvennootschap == "Nee":
-
-        DBI_aftrek = st.radio(
+    DBI_aftrek = st.radio(
         "Komt u in aanmerking voor een DBI-aftrek?",
         ["Ja", "Nee"]
      )
@@ -76,7 +67,6 @@ if st.button ("Volgende ➡️"):
     st.session_state["belastingplichtige"] = belastingplichtige
     st.session_state["Burgerlijke_staat"] = Burgerlijke_staat
     st.session_state["huwelijksstelsel"] = huwelijksstelsel
-    st.session_state["vastgoedvennootschap"] = vastgoedvennootschap
     st.session_state["DBI_aftrek"] = DBI_aftrek
     st.session_state["erkende_vzw"] = erkende_vzw
     if belastingplichtige == "Niet-inwoner":
