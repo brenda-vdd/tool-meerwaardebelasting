@@ -61,6 +61,8 @@ if belastingplichtige == "VZW / private stichting (RPB)":
         "Gaat het over een fiscaal erkende vereniging die aftrekbare giften ontvangt?",
         ["Ja", "Nee"]
      )
+if erkende_vzw == "Ja":
+    st.info("Er is geen meerwaardebelasting van toepassing.")
 
 if st.button ("Volgende ➡️"):
     st.session_state["belastingplichtige"] = belastingplichtige
@@ -68,7 +70,13 @@ if st.button ("Volgende ➡️"):
     st.session_state["huwelijksstelsel"] = huwelijksstelsel
     st.session_state["DBI_aftrek"] = DBI_aftrek
     st.session_state["erkende_vzw"] = erkende_vzw
-    if belastingplichtige == "Niet-inwoner":
+    if (
+        belastingplichtige == "Niet-inwoner"
+        or (
+            belastingplichtige == "VZW / private stichting (RPB)"
+            and erkende_vzw == "Ja"
+        )
+    ):
         st.switch_page("pages/pagina_4.py")
     
     else:

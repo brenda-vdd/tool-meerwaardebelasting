@@ -25,12 +25,33 @@ aankoopwaarde_2025 = st.session_state.get("aankoopwaarde_2025")
 minderwaarden_bedrag = st.session_state.get("minderwaarden_bedrag")
 Verkoop = st.session_state.get("Verkoop")
 titel = st.session_state.get("titel")
+erkende_vzw = st.session_state.get("erkende_vzw")
 
 belasting = 0
+if (
+    belastingplichtige == "Niet-inwoner"
+    or(
+        belastingplichtige == "VZW / private stichting (RPB)"
+        and erkende_vzw == "Ja"
+        )
+):
+    if belastingplichtige == "Niet-inwoner":
+        geen_toepassing_tekst = ("De Belgische meerwaardebelasting is niet van toepassing."
+     )
+    else:
+        geen_toepassing_tekst = ("Fiscaal erkende verenigingen die aftrekbare giften ontvangen "
+                                 "zijn vrijgesteld van de meerwaardebelasting"
+    )
 
-if belastingplichtige == "Niet-inwoner":
+if (
+    belastingplichtige == "Niet-inwoner"
+    or(belastingplichtige == "VZW / private stichting (RPB)"
+       and erkende_vzw == "Ja"
+    )
+):
+
     st.markdown(
-        """
+        f"""
 <div style="
 background-color:#eef8fd;
 padding:20px;
@@ -42,14 +63,13 @@ border-radius:12px;
 margin-top:0;
 color:#0b2e4f;
 ">
-Niet-inwoner
+{belastingplichtige}
 </h4>
 <h2 style="
 color:#0b2e4f;
 font-size:17px;
 margin-bottom:0;
-">
-De Belgische meerwaardebelasting is niet van toepassing.
+">{geen_toepassing_tekst}
 </h2>
 
 </div>
