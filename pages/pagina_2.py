@@ -91,8 +91,10 @@ verkoopdatum = st.date_input(
 )
 
 toon_participatie = not(
-    belastingplichtige == "Vennootschap (VenB)"
-    and DBI_aftrek =="Nee"
+    belastingplichtige in [
+        "Vennootschap (VenB)",
+        "VZW / private stichting (RPB)"
+    ]
 )
 if toon_participatie:
     with st.container(border=True):

@@ -59,8 +59,7 @@ if belastingplichtige == "Vennootschap (VenB)":
 if belastingplichtige == "VZW / private stichting (RPB)":
     erkende_vzw = st.radio(
         "Gaat het over een fiscaal erkende vereniging die aftrekbare giften ontvangt?",
-        ["Ja", "Nee"],
-        key="erkende_vzw"
+        ["Ja", "Nee"]
      )
 
 if st.button ("Volgende ➡️"):

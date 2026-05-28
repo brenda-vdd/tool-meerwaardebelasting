@@ -47,9 +47,10 @@ voorlopige_meerwaarde = Verkoop - aankoopwaarde_berekening
 
 toon_minderwaarde_vraag = not (
     belastingplichtige == "Vennootschap (VenB)"
-    and DBI_aftrek == "Nee"
 )
-if voorlopige_meerwaarde > 0:
+
+if voorlopige_meerwaarde > 0 and toon_minderwaarde_vraag:
+
 
     minderwaarde = st.radio(
         "Hebt u minderwaarden?",
@@ -72,9 +73,12 @@ if meerwaarde >= 0:
 else:
     titel = "Minderwaarde"
     bedrag = abs(meerwaarde)
-with st.container (border=False):
-    
-    st.markdown(
+if belastingplichtige == "Vennootschap (VenB)":
+    tekst_minderwaarde = "Aangezien er sprake is van een minderwaarde, is er geen belasting verschuldigd."
+else:
+    tekst_minderwaarde = "Aangezien er sprake is van een minderwaarde, is er geen meerwaardebelasting verschuldigd."
+    with st.container (border=False):
+        st.markdown(
 f"""
 <div style="
 background-color:#fffbea;
@@ -108,10 +112,7 @@ color:#7f1d1d;
 ">
          
 <h2> Minderwaarde: </h2>
-<p>
-Aangezien er sprake is van een minderwaarde, is er geen meerwaardebelasting verschuldigd.
-<p>
-   
+<p>{tekst_minderwaarde}<p>
 </div>
 """,
     unsafe_allow_html=True
