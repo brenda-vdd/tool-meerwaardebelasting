@@ -85,7 +85,7 @@ margin-bottom:0;
     
     st.stop()
 tarief_tekst = ""
-
+belasting_tekst = ""
 def bereken_ab_belasting(meerwaarde, gebruikte_vrijstelling):
     resterend = max(0,meerwaarde - gebruikte_vrijstelling)
     belasting = 0
@@ -164,6 +164,10 @@ else:
     else:
         belasting = belastbare_basis * 0.10
         tarief_tekst = "10,00%"
+if belastingplichtige == "Vennootschap (VenB)":
+    belasting_tekst = "Verschuldigde belasting"
+else:
+    belasting_tekst = "Verschuldigde meerwaardebelasting"
 
 with st.container (border=False):
     
@@ -177,7 +181,7 @@ border-radius:12px;
 color:#7f1d1d;
 ">
          
-<h2> Verschuldigde meerwaardebelasting: </h2>
+<h2> {belasting_tekst}</h2>
 <h1>
 € {belasting:,.2f}
 </h1>

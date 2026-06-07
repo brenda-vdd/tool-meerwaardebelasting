@@ -36,8 +36,7 @@ Beleggingsgoud, munten, biljetten, digitaal geld,...
     )
 buitenlandse_brokers = None
 toon_buitenlandse_brokers = not(
-    belastingplichtige == "Vennootschap (VenB)"
-    and DBI_aftrek == "Nee")
+    belastingplichtige == "Vennootschap (VenB)")
 if toon_buitenlandse_brokers:
     # Extra vraag tonen na keuze
     if soort_activa:
